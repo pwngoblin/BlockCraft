@@ -1,0 +1,917 @@
+/* Blockcraft — block-editor look. Every rule is scoped to
+   .blockcraft-on, [data-callout="card|columns"] or .blockcraft-*.
+   Colours come from Obsidian theme variables, so Light/Dark work for free. */
+
+body.blockcraft-on {
+  --bc-radius: 12px;
+  --bc-border: 1px solid var(--background-modifier-border);
+  --bc-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --bc-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --bc-gap: 1rem;
+
+  /* macOS-native, airy typography via Obsidian's own variables */
+  --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  --line-height-normal: 1.65;
+}
+
+.theme-dark.blockcraft-on {
+  --bc-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25);
+  --bc-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Reading view: spacious rhythm between top-level blocks. */
+.blockcraft-on .markdown-preview-view .markdown-preview-sizer > div > p,
+.blockcraft-on .markdown-rendered > div > p {
+  margin-block: 0.75em;
+}
+
+/* ---------- Cards: > [!card] Title  (variants: |raised  |accent  |notitle) ----------
+   Default = flat card: pale gray fill, small radius, no border/shadow. */
+.blockcraft-on .callout[data-callout="card"] {
+  --callout-radius: 8px;
+  --callout-border-width: 0px;
+  --callout-padding: 0;
+  --callout-title-padding: 0.9rem 1.25rem 0;
+  --callout-content-padding: 0.9rem 1.25rem;
+
+  background-color: var(--background-secondary);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  mix-blend-mode: normal;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+.blockcraft-on .callout[data-callout="card"] > .callout-title {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold, 600);
+}
+.blockcraft-on .callout[data-callout="card"] > .callout-title .callout-icon { display: none; }
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="notitle"] > .callout-title { display: none; }
+.blockcraft-on .callout[data-callout="card"] > .callout-content > :first-child { margin-top: 0; }
+.blockcraft-on .callout[data-callout="card"] > .callout-content > :last-child { margin-bottom: 0; }
+
+/* Raised card: white, hairline border, soft shadow */
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="raised"] {
+  background-color: var(--background-primary);
+  border: var(--bc-border);
+  border-radius: var(--bc-radius);
+  box-shadow: var(--bc-shadow);
+}
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="raised"]:hover {
+  box-shadow: var(--bc-shadow-hover);
+}
+/* Accent card: solid accent fill, white text */
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="accent"] {
+  background-color: var(--bc-accent, var(--interactive-accent));
+  border-radius: var(--bc-radius);
+  color: var(--text-on-accent, #fff);
+}
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="accent"] .callout-title,
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="accent"] .callout-content,
+.blockcraft-on .callout[data-callout="card"][data-callout-metadata~="accent"] a { color: inherit; }
+
+/* ---------- Columns: > [!columns] with nested > > [!card] children ---------- */
+.blockcraft-on .callout[data-callout="columns"] {
+  --callout-padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  mix-blend-mode: normal;
+}
+.blockcraft-on .callout[data-callout="columns"] > .callout-title {
+  display: none; /* the [!columns] wrapper is structure, not content */
+}
+.blockcraft-on .callout[data-callout="columns"] > .callout-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); /* collapses on narrow panes */
+  gap: var(--bc-gap);
+  align-items: start;
+  padding: 0;
+}
+.blockcraft-on .callout[data-callout="columns"] > .callout-content > .callout {
+  margin: 0; /* grid gap handles spacing */
+  height: 100%;
+}
+
+/* ---------- Embeds as cards ---------- */
+.blockcraft-on .markdown-embed,
+.blockcraft-on .internal-embed.markdown-embed {
+  border: var(--bc-border);
+  border-radius: var(--bc-radius);
+  background-color: var(--background-primary-alt, var(--background-secondary));
+  box-shadow: var(--bc-shadow);
+  padding: 0.5rem 1.1rem;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.blockcraft-on .markdown-embed:hover {
+  box-shadow: var(--bc-shadow-hover);
+}
+
+/* ---------- Dividers: three dots ---------- */
+.blockcraft-on .markdown-rendered hr,
+.blockcraft-on .cm-content hr {
+  border: 0;
+  height: auto;
+  margin: 1.6em 0;
+  background: none;
+  text-align: center;
+  line-height: 1;
+}
+.blockcraft-on .markdown-rendered hr::after,
+.blockcraft-on .cm-content hr::after {
+  content: "\2022   \2022   \2022";
+  color: var(--text-faint);
+  font-size: 0.7em;
+  letter-spacing: 0.2em;
+}
+
+/* ---------- Heading rhythm: more air above than below ---------- */
+.blockcraft-on .markdown-rendered h1,
+.blockcraft-on .markdown-rendered h2,
+.blockcraft-on .markdown-rendered h3 {
+  margin-top: 1.6em;
+  margin-bottom: 0.4em;
+  font-weight: var(--font-semibold, 600);
+}
+.blockcraft-on .cm-line.HyperMD-header-1,
+.blockcraft-on .cm-line.HyperMD-header-2,
+.blockcraft-on .cm-line.HyperMD-header-3 {
+  padding-top: 0.8em;
+}
+
+/* ---------- Slash/suggest popover: rounded list ---------- */
+.blockcraft-on .suggestion-container {
+  border-radius: 16px;
+  border: var(--bc-border);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 6px;
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+.blockcraft-on .suggestion-item { border-radius: 10px; }
+
+/* ---------- Gutter grip + "..." button + drag feedback (used by Phase 3) ---------- */
+/* 6-dot grip (2 columns x 3 rows), drawn in CSS so it is crisp and themeable */
+.blockcraft-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4em;
+  height: 1.6em;
+  color: var(--text-faint);
+  cursor: grab;
+  opacity: 0;
+  user-select: none;
+  border-radius: 6px;
+  transition: opacity 0.12s ease, background-color 0.12s ease;
+}
+.blockcraft-handle::before {
+  content: "";
+  width: 10px;
+  height: 15px;
+  background-image: radial-gradient(circle, currentColor 1.3px, transparent 1.7px);
+  background-size: 5px 5px;
+}
+.blockcraft-handle:hover { background-color: var(--background-modifier-hover); color: var(--text-muted); }
+.blockcraft-handle:active { cursor: grabbing; }
+
+/* Circled "..." at the right end of a block: opens the block action menu */
+.blockcraft-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 50%;
+  color: var(--text-faint);
+  background: var(--background-primary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+.blockcraft-more::before { content: "\00b7\00b7\00b7"; letter-spacing: 1px; font-weight: 700; }
+.blockcraft-more:hover { color: var(--text-muted); border-color: var(--background-modifier-border-hover, var(--text-faint)); }
+
+.cm-line:hover .blockcraft-handle,
+.cm-line:hover .blockcraft-more,
+.blockcraft-handle.is-active,
+.blockcraft-more.is-active { opacity: 1; }
+
+/* Rounded accent bar between blocks while dragging */
+.blockcraft-drop-line {
+  height: 4px;
+  margin: -2px 0;
+  background-color: var(--interactive-accent);
+  opacity: 0.85;
+  border-radius: 2px;
+  pointer-events: none;
+}
+/* Source block stays in place, faded; a translucent copy follows the cursor */
+.blockcraft-dragging { opacity: 0.4; }
+.blockcraft-drag-ghost {
+  position: fixed;
+  z-index: var(--layer-popover, 50);
+  pointer-events: none;
+  opacity: 0.85;
+  background: var(--background-primary);
+  border-radius: var(--bc-radius, 12px);
+  box-shadow: var(--bc-shadow-hover, 0 8px 24px rgba(0, 0, 0, 0.15));
+}
+
+/* =====================================================================
+   macOS-native controls (Obsidian runs on Electron/Chromium on macOS)
+   ===================================================================== */
+body.blockcraft-on {
+  /* Follow the system accent colour (Settings > Appearance > Accent colour) */
+  --bc-accent: #007aff;
+  --bc-focus-ring: color-mix(in srgb, var(--bc-accent) 45%, transparent);
+  --bc-control-bg: #ffffff;
+  --bc-control-border: rgba(0, 0, 0, 0.12);
+  --bc-control-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.18);
+  --bc-menu-bg: rgba(246, 246, 246, 0.78);
+  --font-ui-small: 13px;
+  --font-ui-medium: 13px;
+  --font-interface: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+}
+@supports (color: AccentColor) {
+  body.blockcraft-on { --bc-accent: AccentColor; }
+}
+.theme-dark.blockcraft-on {
+  --bc-control-bg: rgba(255, 255, 255, 0.12);
+  --bc-control-border: rgba(255, 255, 255, 0.1);
+  --bc-control-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.5);
+  --bc-menu-bg: rgba(40, 40, 40, 0.78);
+}
+body.blockcraft-on {
+  --interactive-accent: var(--bc-accent);
+  --interactive-accent-hover: color-mix(in srgb, var(--bc-accent) 88%, black);
+  --text-on-accent: #ffffff;
+  accent-color: var(--bc-accent); /* native checkboxes, radios, range sliders */
+}
+
+/* Push buttons: 22px tall, 6px radius, hairline + soft shadow, like NSButton */
+.blockcraft-on button:not(.clickable-icon):not(.blockcraft-more):not(.mod-ghost):not(.mod-quiet) {
+  height: 22px;
+  min-height: 22px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 400;
+  border: 0.5px solid var(--bc-control-border);
+  border-radius: 6px;
+  background: var(--bc-control-bg);
+  color: var(--text-normal);
+  box-shadow: var(--bc-control-shadow);
+  transition: background-color 0.1s ease;
+}
+.blockcraft-on button:not(.clickable-icon):not(.blockcraft-more):hover { background: var(--background-modifier-hover); }
+.blockcraft-on button:not(.clickable-icon):active { filter: brightness(0.94); }
+.blockcraft-on button.mod-cta,
+.blockcraft-on button.mod-warning {
+  color: var(--text-on-accent);
+  border-color: transparent;
+}
+.blockcraft-on button.mod-cta { background: var(--bc-accent); }
+.blockcraft-on button.mod-cta:hover { background: var(--interactive-accent-hover); }
+.blockcraft-on button.mod-warning { background: var(--background-modifier-error); }
+
+/* Icon buttons: flat, rounded square hover (toolbar style) */
+.blockcraft-on .clickable-icon { border-radius: 6px; }
+.blockcraft-on .clickable-icon:hover { background-color: var(--background-modifier-hover); }
+
+/* Focus ring: macOS-style soft 3px ring */
+.blockcraft-on button:focus-visible,
+.blockcraft-on input:focus-visible,
+.blockcraft-on select:focus-visible,
+.blockcraft-on .checkbox-container:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--bc-focus-ring);
+}
+
+/* Toggle switch (NSSwitch): 38x22 pill, white knob, accent when on */
+.blockcraft-on .checkbox-container {
+  width: 38px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: var(--background-modifier-border-hover, rgba(120, 120, 128, 0.32));
+  box-shadow: none;
+  transition: background-color 0.18s ease;
+}
+.blockcraft-on .checkbox-container.is-enabled { background-color: var(--bc-accent); }
+.blockcraft-on .checkbox-container::after {
+  width: 18px;
+  height: 18px;
+  top: 2px;
+  left: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.18s ease;
+}
+.blockcraft-on .checkbox-container.is-enabled::after { transform: translateX(16px); }
+
+/* Text fields and pop-up buttons (NSPopUpButton) */
+.blockcraft-on input[type="text"],
+.blockcraft-on input[type="search"],
+.blockcraft-on input[type="number"],
+.blockcraft-on textarea {
+  border: 0.5px solid var(--bc-control-border);
+  border-radius: 6px;
+  background: var(--bc-control-bg);
+  box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.12);
+}
+.blockcraft-on select.dropdown,
+.blockcraft-on .dropdown {
+  height: 22px;
+  border: 0.5px solid var(--bc-control-border);
+  border-radius: 6px;
+  background-color: var(--bc-control-bg);
+  box-shadow: var(--bc-control-shadow);
+}
+
+/* Context menus: NSMenu look — vibrancy, 10px radius, accent-filled highlight */
+.blockcraft-on .menu {
+  background: var(--bc-menu-bg);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  border: 0.5px solid var(--bc-control-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22), 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+}
+.blockcraft-on .menu-item { border-radius: 5px; padding: 3px 10px; font-size: 13px; }
+.blockcraft-on .menu-item.selected:not(.is-disabled),
+.blockcraft-on .menu-item:hover:not(.is-disabled) {
+  background-color: var(--bc-accent);
+  color: var(--text-on-accent);
+}
+.blockcraft-on .menu-item.selected:not(.is-disabled) .menu-item-icon,
+.blockcraft-on .menu-item:hover:not(.is-disabled) .menu-item-icon { color: var(--text-on-accent); }
+.blockcraft-on .menu-separator { margin: 5px 8px; }
+
+/* (custom scrollbars removed: macOS draws native overlay scrollbars; overriding them caused CM6 measure loops) */
+
+/* ---------- SF Symbols-like iconography ----------
+   Obsidian's icons are Lucide (stroke icons). SF Symbols "Regular" weight is a thin,
+   round-capped stroke at ~13pt; we tune Lucide's size/weight to match. (Apple's actual
+   SF Symbols may not be redistributed, so they are not bundled.) */
+body.blockcraft-on {
+  --icon-xs: 14px;
+  --icon-s: 15px;
+  --icon-m: 17px;
+  --icon-l: 18px;
+  --icon-stroke: 1.5px;
+  --icon-xs-stroke-width: 1.5px;
+  --icon-s-stroke-width: 1.5px;
+  --icon-m-stroke-width: 1.5px;
+  --icon-l-stroke-width: 1.5px;
+  --icon-color: var(--text-muted); /* SF "secondary label" tone */
+}
+.blockcraft-on .svg-icon {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* =====================================================================
+   Liquid Glass (macOS 26 look): translucent, blurred, saturated surfaces,
+   specular edge highlights, capsule controls, soft deep shadows.
+   CSS can imitate the look; real lensing/refraction is only available from
+   macOS itself (see findings §11: "Native menus" / "Translucent window").
+   ===================================================================== */
+body.blockcraft-on {
+  --bc-glass-bg: rgba(255, 255, 255, 0.55);
+  --bc-glass-blur: blur(22px) saturate(190%) brightness(1.04);
+  --bc-glass-edge: rgba(255, 255, 255, 0.65);
+  --bc-glass-highlight:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 14px rgba(255, 255, 255, 0.14);
+  --bc-glass-shadow: 0 10px 34px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.theme-dark.blockcraft-on {
+  --bc-glass-bg: rgba(44, 44, 46, 0.5);
+  --bc-glass-blur: blur(22px) saturate(180%) brightness(1.1);
+  --bc-glass-edge: rgba(255, 255, 255, 0.16);
+  --bc-glass-highlight:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 14px rgba(255, 255, 255, 0.05);
+  --bc-glass-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Glass surfaces: menus, popovers, dialogs, toasts, tooltips, drag ghost */
+.blockcraft-on .menu,
+.blockcraft-on .suggestion-container,
+.blockcraft-on .prompt,
+.blockcraft-on .modal,
+.blockcraft-on .notice,
+.blockcraft-on .tooltip,
+.blockcraft-on .blockcraft-drag-ghost {
+  background: var(--bc-glass-bg);
+  -webkit-backdrop-filter: var(--bc-glass-blur);
+  backdrop-filter: var(--bc-glass-blur);
+  border: 1px solid var(--bc-glass-edge);
+  box-shadow: var(--bc-glass-highlight), var(--bc-glass-shadow);
+}
+.blockcraft-on .menu { border-radius: 14px; padding: 6px; }
+.blockcraft-on .modal,
+.blockcraft-on .prompt { border-radius: 22px; }
+.blockcraft-on .notice,
+.blockcraft-on .tooltip { border-radius: 14px; }
+.blockcraft-on .menu-item,
+.blockcraft-on .suggestion-item { border-radius: 9px; }
+
+/* Capsule controls (macOS 26 bordered buttons are fully rounded) */
+.blockcraft-on button:not(.clickable-icon):not(.blockcraft-more):not(.mod-ghost):not(.mod-quiet) {
+  border-radius: 999px;
+  padding: 0 14px;
+  background: var(--bc-glass-bg);
+  -webkit-backdrop-filter: var(--bc-glass-blur);
+  backdrop-filter: var(--bc-glass-blur);
+  border: 1px solid var(--bc-glass-edge);
+  box-shadow: var(--bc-glass-highlight), 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.blockcraft-on button.mod-cta {
+  /* tinted glass: accent colour with the same specular edge */
+  background: color-mix(in srgb, var(--bc-accent) 88%, transparent);
+  border-color: color-mix(in srgb, white 35%, transparent);
+}
+.blockcraft-on .clickable-icon { border-radius: 10px; } /* header buttons are rounded squares */
+.blockcraft-on input[type="text"],
+.blockcraft-on input[type="search"],
+.blockcraft-on input[type="number"],
+.blockcraft-on select.dropdown { border-radius: 999px; padding-inline: 12px; }
+.blockcraft-on textarea { border-radius: 14px; }
+
+/* Block "..." button as a glass capsule */
+.blockcraft-on .blockcraft-more {
+  width: 28px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--bc-glass-bg);
+  -webkit-backdrop-filter: var(--bc-glass-blur);
+  backdrop-filter: var(--bc-glass-blur);
+  border: 1px solid var(--bc-glass-edge);
+  box-shadow: var(--bc-glass-highlight);
+}
+
+/* Toggle knob gets a glass sheen */
+.blockcraft-on .checkbox-container::after {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f1f4 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Users who ask for less transparency / motion get solid, still rounded surfaces */
+@media (prefers-reduced-transparency: reduce) {
+  .blockcraft-on .menu, .blockcraft-on .suggestion-container, .blockcraft-on .prompt,
+  .blockcraft-on .modal, .blockcraft-on .notice, .blockcraft-on .tooltip,
+  .blockcraft-on .blockcraft-more, .blockcraft-on .blockcraft-drag-ghost,
+  .blockcraft-on button {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--background-primary);
+  }
+}
+
+/* =====================================================================
+   Window shell: tinted window, inset rounded paper panel, pill tabs,
+   segmented-control sidebar tabs, soft pill selection, tinted doc header.
+   Selectors are Obsidian's documented layout classes — verify in-app.
+   ===================================================================== */
+body.blockcraft-on {
+  --bc-window-bg: #dfe4ea;           /* cool gray-blue sidebar tone */
+  --bc-header-tint: rgba(120, 170, 225, 0.35); /* the soft blue wash at the top of a doc */
+  --bc-pill-bg: rgba(60, 60, 67, 0.12);
+}
+.theme-dark.blockcraft-on {
+  --bc-window-bg: #26282c;
+  --bc-header-tint: rgba(70, 110, 170, 0.35);
+  --bc-pill-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* Window background is the tinted "desk"; the note body is an inset rounded paper sheet,
+   with the header buttons floating above it on the tinted pane (floating pills) */
+.blockcraft-on .horizontal-main-container,
+.blockcraft-on .workspace-split.mod-left-split,
+.blockcraft-on .workspace-split.mod-right-split,
+.blockcraft-on .workspace-tabs.mod-top .workspace-tab-header-container {
+  background-color: var(--bc-window-bg);
+}
+.blockcraft-on .workspace-split.mod-root {
+  margin: 0 8px 8px 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bc-header-tint) 0%, color-mix(in srgb, var(--bc-header-tint) 60%, var(--bc-window-bg)) 100%);
+}
+.blockcraft-on .workspace-split.mod-root .workspace-leaf-content,
+.blockcraft-on .workspace-split.mod-root .view-header { background: transparent; }
+.blockcraft-on .workspace-split.mod-root .view-header { border-bottom: 0; }
+.blockcraft-on .workspace-split.mod-root .view-content {
+  margin: 0 12px 12px;
+  border-radius: 18px;
+  background: var(--background-primary);
+  box-shadow: 0 0 0 0.5px var(--background-modifier-border);
+}
+.blockcraft-on .view-header-title { font-weight: var(--font-semibold, 600); }
+
+/* Big bold note title with a hairline under it */
+.blockcraft-on .inline-title {
+  font-size: 2.1em;
+  font-weight: 700;
+  padding-bottom: 0.45em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+/* Top tabs: active tab is a white capsule */
+.blockcraft-on .workspace-tab-header.is-active {
+  background: var(--background-primary);
+  border-radius: 999px;
+  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.12);
+}
+.blockcraft-on .workspace-tab-header { border-radius: 999px; }
+.blockcraft-on .workspace-tab-header::before,
+.blockcraft-on .workspace-tab-header::after { display: none; } /* remove classic tab-curve joins */
+
+/* Sidebar tab strip = segmented control (list / tasks / attachments / search) */
+.blockcraft-on .mod-left-split .workspace-tab-header-container-inner,
+.blockcraft-on .mod-right-split .workspace-tab-header-container-inner {
+  background: var(--bc-pill-bg);
+  border-radius: 999px;
+  padding: 3px;
+  margin: 6px 10px;
+  gap: 2px;
+}
+.blockcraft-on .mod-left-split .workspace-tab-header.is-active,
+.blockcraft-on .mod-right-split .workspace-tab-header.is-active {
+  background: var(--background-primary);
+  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Sidebar rows (file tree, outline): selected = soft rounded gray pill, no hard edges */
+.blockcraft-on .tree-item-self,
+.blockcraft-on .nav-file-title,
+.blockcraft-on .nav-folder-title { border-radius: 10px; }
+.blockcraft-on .tree-item-self.is-active,
+.blockcraft-on .nav-file-title.is-active,
+.blockcraft-on .tree-item-self.is-selected {
+  background-color: var(--bc-pill-bg);
+  color: var(--text-normal);
+}
+
+/* Header buttons float as white pills with a hairline shadow */
+.blockcraft-on .workspace-split.mod-root .view-actions .clickable-icon,
+.blockcraft-on .workspace-split.mod-root .view-header-nav-buttons .clickable-icon {
+  background: var(--background-primary);
+  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* Paper column: centred, generous side padding */
+.blockcraft-on .markdown-source-view.mod-cm6 .cm-sizer,
+.blockcraft-on .markdown-preview-sizer { padding-inline: 1.5rem; }
+
+/* ---------- Floating format toolbar (capsule at the bottom of the page) ---------- */
+.blockcraft-toolbar {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--bc-glass-bg);
+  -webkit-backdrop-filter: var(--bc-glass-blur);
+  backdrop-filter: var(--bc-glass-blur);
+  border: 1px solid var(--bc-glass-edge);
+  box-shadow: var(--bc-glass-highlight), var(--bc-glass-shadow);
+}
+.blockcraft-toolbar button {
+  width: 34px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.blockcraft-toolbar button.is-active { background: color-mix(in srgb, var(--bc-accent) 18%, transparent) !important; color: var(--bc-accent); }
+.blockcraft-toolbar .blockcraft-sep { width: 1px; height: 18px; margin: 0 4px; background: var(--background-modifier-border); }
+
+/* ---------- Engine hooks: handles are absolutely positioned by the CM6 plugin ---------- */
+.blockcraft-handle, .blockcraft-more { pointer-events: none; }
+.blockcraft-handle.is-visible, .blockcraft-more.is-visible { opacity: 1; pointer-events: auto; }
+.blockcraft-drop-line { position: absolute; }
+.cm-line.blockcraft-dragging { opacity: 0.4; }
+
+/* The active leaf is opaque white by default and hides the tinted pane: make it transparent (the paper sheet is .view-content) */
+.blockcraft-on .workspace-split.mod-root .workspace-leaf,
+.blockcraft-on .workspace-split.mod-root .workspace-tabs,
+.blockcraft-on .workspace-split.mod-root .workspace-tab-container { background: transparent; }
+
+/* Pop-up buttons: leave room for the chevron so it doesn't overlap the label */
+.blockcraft-on select.dropdown,
+.blockcraft-on .dropdown { padding-right: 28px; background-position: right 8px center; }
+
+/* =====================================================================
+   Shell v2 — chrome elements (title/tab bar, sidebar, header pills, status pill)
+   Selectors: Obsidian 1.15 layout classes.
+   ===================================================================== */
+body.blockcraft-on {
+  --bc-pill-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.05);
+  --bc-pill-bg: #ffffff;
+}
+.theme-dark.blockcraft-on { --bc-pill-bg: rgba(255, 255, 255, 0.1); --bc-pill-shadow: 0 0.5px 1.5px rgba(0,0,0,.5); }
+
+/* Title/tab bar sits on the tinted window; tabs are capsules, the active one is white */
+.blockcraft-on .workspace-tabs.mod-top .workspace-tab-header-container,
+.blockcraft-on .titlebar,
+.blockcraft-on .titlebar-inner { background-color: var(--bc-window-bg); border-bottom: 0; }
+.blockcraft-on .workspace-tab-header-container { padding-block: 6px; height: auto; }
+.blockcraft-on .workspace-tab-header.is-active { background: var(--bc-pill-bg); box-shadow: var(--bc-pill-shadow); }
+.blockcraft-on .workspace-tab-header:not(.is-active):hover { background: var(--bc-pill-bg-hover, rgba(255,255,255,.5)); }
+.blockcraft-on .workspace-tab-header-inner-title { font-weight: var(--font-medium, 500); }
+.blockcraft-on .workspace-tab-header-new-tab .clickable-icon,
+.blockcraft-on .sidebar-toggle-button .clickable-icon { background: transparent; box-shadow: none; }
+
+/* Sidebar toolbar (new note, new folder, sort, ...) as one white pill group */
+.blockcraft-on .nav-header .nav-buttons-container {
+  display: inline-flex;
+  gap: 2px;
+  margin: 8px 10px;
+  padding: 3px 6px;
+  background: var(--bc-pill-bg);
+  border-radius: 12px;
+  box-shadow: var(--bc-pill-shadow);
+}
+.blockcraft-on .nav-header .clickable-icon { background: transparent; box-shadow: none; }
+
+/* Sidebar footer (vault name, help, settings) */
+.blockcraft-on .workspace-sidedock-vault-profile { background: transparent; border-top: 0; padding: 8px 12px; }
+.blockcraft-on .workspace-drawer-vault-actions .clickable-icon { background: transparent; box-shadow: none; }
+
+/* Note header: back/forward and actions float as white pills on the tinted pane, title centred-left */
+.blockcraft-on .workspace-split.mod-root .view-header { padding: 10px 14px 6px; height: auto; align-items: center; }
+.blockcraft-on .workspace-split.mod-root .view-header-nav-buttons,
+.blockcraft-on .workspace-split.mod-root .view-actions {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px 6px;
+  background: var(--bc-pill-bg);
+  border-radius: 12px;
+  box-shadow: var(--bc-pill-shadow);
+}
+.blockcraft-on .workspace-split.mod-root .view-header-nav-buttons .clickable-icon,
+.blockcraft-on .workspace-split.mod-root .view-actions .clickable-icon { background: transparent; box-shadow: none; }
+.blockcraft-on .view-header-title-container { padding-inline: 12px; }
+.blockcraft-on .view-header-breadcrumb { color: var(--text-muted); font-size: 0.85em; }
+.blockcraft-on .view-header-title { font-weight: var(--font-semibold, 600); }
+
+/* Status bar becomes a small floating pill at the bottom-right (floating pill) */
+.blockcraft-on .status-bar {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: auto;
+  width: auto;
+  padding: 5px 14px;
+  background: var(--bc-glass-bg);
+  -webkit-backdrop-filter: var(--bc-glass-blur);
+  backdrop-filter: var(--bc-glass-blur);
+  border: 1px solid var(--bc-glass-edge);
+  border-radius: 999px;
+  box-shadow: var(--bc-glass-highlight), var(--bc-glass-shadow);
+  z-index: 20;
+}
+
+/* Light-theme contrast for the glass `...` button */
+.theme-light.blockcraft-on .blockcraft-more { border-color: var(--background-modifier-border); color: var(--text-muted); background: var(--background-primary); }
+
+/* =====================================================================
+   Blockcraft right panel (Insert / Format / Style / Info sidebar)
+   ===================================================================== */
+.blockcraft-panel { padding: 0 !important; background: var(--bc-window-bg); }
+.blockcraft-panel .bc-tabs { display: flex; gap: 18px; padding: 14px 18px 10px; border-bottom: 1px solid color-mix(in srgb, var(--text-faint) 25%, transparent); margin: 0 12px; padding-inline: 6px; }
+.blockcraft-panel .bc-tab { cursor: pointer; color: var(--text-faint); font-size: 14px; font-weight: 500; }
+.blockcraft-panel .bc-tab:hover { color: var(--text-muted); }
+.blockcraft-panel .bc-tab.is-active { color: var(--text-normal); font-weight: 600; }
+.blockcraft-panel .bc-body { padding: 10px 18px 24px; overflow-y: auto; }
+.blockcraft-panel .bc-section { margin: 18px 0 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+.blockcraft-panel .bc-body > .bc-section:first-child { margin-top: 8px; }
+.blockcraft-panel .bc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 12px 10px; }
+.blockcraft-panel .bc-tile { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+.blockcraft-panel .bc-tile-icon {
+  width: 100%; aspect-ratio: 1; max-width: 76px; display: flex; align-items: center; justify-content: center;
+  background: var(--bc-pill-bg, #fff); border-radius: 14px; box-shadow: var(--bc-pill-shadow, 0 1px 3px rgba(0,0,0,.12));
+  color: var(--text-muted); transition: transform .12s ease, box-shadow .12s ease;
+}
+.blockcraft-panel .bc-tile-icon .svg-icon { width: 26px; height: 26px; }
+.blockcraft-panel .bc-tile:hover .bc-tile-icon { transform: translateY(-1px); box-shadow: var(--bc-shadow-hover); color: var(--text-normal); }
+.blockcraft-panel .bc-tile:active .bc-tile-icon { transform: scale(0.97); }
+.blockcraft-panel .bc-tile-label { font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.2; }
+.blockcraft-panel .bc-stack { display: flex; flex-direction: column; gap: 6px; }
+.blockcraft-panel .bc-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.blockcraft-panel .bc-btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; padding: 7px 12px;
+  background: var(--bc-pill-bg, #fff); border-radius: 10px; box-shadow: var(--bc-pill-shadow); color: var(--text-normal);
+}
+.blockcraft-panel .bc-btn:hover { background: var(--background-modifier-hover); }
+.blockcraft-panel .bc-btn.is-active { background: color-mix(in srgb, var(--bc-accent, var(--interactive-accent)) 16%, var(--bc-pill-bg, #fff)); color: var(--bc-accent, var(--interactive-accent)); }
+.blockcraft-panel .bc-wide { width: 100%; }
+.blockcraft-panel .bc-sq { width: 36px; height: 34px; padding: 0; justify-content: center; }
+.blockcraft-panel .bc-btn-icon .svg-icon { width: 16px; height: 16px; }
+.blockcraft-panel .bc-h1 { font-size: 18px; font-weight: 700; } .blockcraft-panel .bc-h2 { font-size: 16px; font-weight: 650; }
+.blockcraft-panel .bc-h3 { font-size: 14px; font-weight: 600; } .blockcraft-panel .bc-h4 { font-weight: 700; }
+.blockcraft-panel .bc-swatches { gap: 10px; }
+.blockcraft-panel .bc-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+.blockcraft-panel .bc-swatch.is-active { box-shadow: 0 0 0 2px var(--background-primary), 0 0 0 4px var(--bc-accent, var(--interactive-accent)); }
+.blockcraft-panel .bc-info { background: var(--bc-pill-bg, #fff); border-radius: 12px; box-shadow: var(--bc-pill-shadow); padding: 4px 14px; }
+.blockcraft-panel .bc-info-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--background-modifier-border); }
+.blockcraft-panel .bc-info-row:last-child { border-bottom: 0; }
+.blockcraft-panel .bc-info-val { color: var(--text-muted); }
+.blockcraft-panel .bc-empty { color: var(--text-faint); font-size: 13px; padding: 12px 0; }
+
+/* Properties / metadata: inline fields must stay flat (the capsule input rule made the key fields look like empty pills) */
+.blockcraft-on .metadata-container input,
+.blockcraft-on .metadata-container .metadata-input-text,
+.blockcraft-on .metadata-container .metadata-property-key-input,
+.blockcraft-on .metadata-property input {
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  padding-inline: 4px;
+}
+.blockcraft-on .metadata-property-key-input:hover,
+.blockcraft-on .metadata-container input:hover { background: var(--background-modifier-hover); }
+.blockcraft-on .metadata-container input:focus-visible { background: var(--background-primary); box-shadow: 0 0 0 3px var(--bc-focus-ring); }
+.blockcraft-on .multi-select-pill { border-radius: 999px; }
+.blockcraft-on .metadata-add-button { border-radius: 8px; }
+
+/* =====================================================================
+   Slash menu (/): rounded glass popover, icon + label rows, gray pill highlight
+   ===================================================================== */
+.blockcraft-on .suggestion-container { min-width: 300px; max-width: 360px; padding: 6px; }
+.blockcraft-on .suggestion-container .suggestion { max-height: 340px; padding: 0; }
+.blockcraft-on .suggestion-item.bc-slash-item {
+  display: flex; align-items: center; gap: 12px; padding: 7px 10px; border-radius: 10px; font-size: 14px; color: var(--text-normal);
+}
+.blockcraft-on .suggestion-item.bc-slash-item.is-selected { background: rgba(120, 120, 128, 0.16); }
+.blockcraft-on .bc-slash-icon { display: inline-flex; width: 22px; justify-content: center; color: var(--text-muted); }
+.blockcraft-on .bc-slash-icon .svg-icon { width: 18px; height: 18px; }
+.blockcraft-on .bc-slash-label { flex: 1; }
+.blockcraft-on .bc-slash-group { font-size: 11px; color: var(--text-faint); }
+.blockcraft-on .prompt-instructions { opacity: 0.7; font-size: 11px; }
+
+/* =====================================================================
+   OLED dark mode — pure-black surfaces (toggle: Blockcraft panel -> Style -> Appearance)
+   Applies only when Obsidian is in dark mode.
+   ===================================================================== */
+.theme-dark.blockcraft-oled {
+  --background-primary: #000000;
+  --background-primary-alt: #0b0b0c;
+  --background-secondary: #0b0b0c;
+  --background-secondary-alt: #000000;
+  --background-modifier-border: #1f1f23;
+  --background-modifier-border-hover: #2c2c31;
+  --background-modifier-hover: rgba(255, 255, 255, 0.07);
+  --background-modifier-form-field: #0b0b0c;
+  --bc-window-bg: #000000;
+  --bc-header-tint: rgba(50, 80, 140, 0.28);
+  --bc-pill-bg: #17171a;
+  --bc-pill-bg-hover: rgba(255, 255, 255, 0.08);
+  --bc-control-bg: #17171a;
+  --bc-glass-bg: rgba(18, 18, 20, 0.62);
+  --bc-menu-bg: rgba(18, 18, 20, 0.82);
+  --bc-shadow: 0 0 0 1px #1f1f23;
+  --bc-shadow-hover: 0 0 0 1px #34343a, 0 8px 24px rgba(0, 0, 0, 0.7);
+  --bc-pill-shadow: 0 0 0 1px #202024;
+  --code-background: #0b0b0c;
+  --tab-container-background: #000000;
+  --titlebar-background: #000000;
+  --titlebar-background-focused: #000000;
+  --workspace-background-translucent: rgba(0, 0, 0, 0.7);
+}
+.theme-dark.blockcraft-oled .workspace-split.mod-root,
+.theme-dark.blockcraft-oled .horizontal-main-container { background-color: #000; }
+.theme-dark.blockcraft-oled .workspace-split.mod-root .view-content { box-shadow: 0 0 0 1px #17171a; }
+.theme-dark.blockcraft-oled .callout[data-callout="card"] { background-color: #0e0e10; }
+.theme-dark.blockcraft-oled .blockcraft-panel { background: #000; }
+.theme-dark.blockcraft-oled .blockcraft-panel .bc-tile-icon,
+.theme-dark.blockcraft-oled .blockcraft-panel .bc-btn,
+.theme-dark.blockcraft-oled .blockcraft-panel .bc-info { background: #121214; }
+
+/* =====================================================================
+   OLED black — whole app. Higher specificity than Obsidian's own `.theme-dark` palette.
+   Overrides the base colour scale (so every surface derived from it goes black) and the
+   chrome-specific variables. Text colours are untouched.
+   ===================================================================== */
+body.blockcraft-oled {
+  color-scheme: dark;
+  --color-base-00: #000000;
+  --color-base-05: #040405;
+  --color-base-10: #09090a;
+  --color-base-20: #0d0d0f;
+  --color-base-25: #121214;
+  --color-base-30: #1a1a1d;
+  --color-base-35: #212125;
+  --color-base-40: #2b2b30;
+  --color-base-50: #44444b;
+
+  --background-primary: #000000;
+  --background-primary-alt: #0a0a0b;
+  --background-secondary: #070708;
+  --background-secondary-alt: #000000;
+  --background-modifier-border: #1d1d21;
+  --background-modifier-border-hover: #2b2b30;
+  --background-modifier-border-focus: #3a3a41;
+  --background-modifier-hover: rgba(255, 255, 255, 0.07);
+  --background-modifier-active-hover: rgba(255, 255, 255, 0.11);
+  --background-modifier-form-field: #0a0a0b;
+  --background-modifier-cover: rgba(0, 0, 0, 0.85);
+  --background-modifier-message: #0a0a0b;
+  --divider-color: #17171a;
+  --titlebar-background: #000000;
+  --titlebar-background-focused: #000000;
+  --tab-container-background: #000000;
+  --tab-background-active: #000000;
+  --ribbon-background: #000000;
+  --ribbon-background-collapsed: #000000;
+  --workspace-background-translucent: rgba(0, 0, 0, 0.72);
+  --nav-item-background-hover: rgba(255, 255, 255, 0.07);
+  --nav-item-background-active: rgba(255, 255, 255, 0.11);
+  --interactive-normal: #17171a;
+  --interactive-hover: #202024;
+  --scrollbar-bg: transparent;
+  --scrollbar-thumb-bg: rgba(255, 255, 255, 0.14);
+  --scrollbar-active-thumb-bg: rgba(255, 255, 255, 0.24);
+  --code-background: #09090a;
+  --blockquote-background-color: #09090a;
+  --table-header-background: #09090a;
+  --table-header-background-hover: #121214;
+  --table-border-color: #1d1d21;
+  --input-shadow: inset 0 0 0 1px #1d1d21;
+  --input-shadow-hover: inset 0 0 0 1px #2b2b30;
+  --shadow-s: 0 0 0 1px #1d1d21, 0 2px 8px rgba(0, 0, 0, 0.8);
+  --shadow-l: 0 0 0 1px #26262b, 0 16px 48px rgba(0, 0, 0, 0.9);
+
+  /* Blockcraft tokens */
+  --bc-window-bg: #000000;
+  --bc-header-tint: rgba(45, 75, 135, 0.22);
+  --bc-pill-bg: #141416;
+  --bc-pill-bg-hover: rgba(255, 255, 255, 0.08);
+  --bc-control-bg: #141416;
+  --bc-control-border: #26262b;
+  --bc-glass-bg: rgba(14, 14, 16, 0.66);
+  --bc-glass-edge: rgba(255, 255, 255, 0.12);
+  --bc-menu-bg: rgba(14, 14, 16, 0.86);
+  --bc-border: 1px solid #1d1d21;
+  --bc-shadow: 0 0 0 1px #1d1d21;
+  --bc-shadow-hover: 0 0 0 1px #34343a, 0 10px 30px rgba(0, 0, 0, 0.85);
+  --bc-pill-shadow: 0 0 0 1px #1d1d21;
+}
+body.blockcraft-oled,
+body.blockcraft-oled .app-container,
+body.blockcraft-oled .horizontal-main-container,
+body.blockcraft-oled .workspace,
+body.blockcraft-oled .workspace-split,
+body.blockcraft-oled .workspace-tabs,
+body.blockcraft-oled .workspace-tab-container,
+body.blockcraft-oled .workspace-leaf,
+body.blockcraft-oled .workspace-leaf-content,
+body.blockcraft-oled .titlebar,
+body.blockcraft-oled .titlebar-inner,
+body.blockcraft-oled .workspace-ribbon,
+body.blockcraft-oled .workspace-tab-header-container,
+body.blockcraft-oled .nav-header,
+body.blockcraft-oled .workspace-sidedock-vault-profile,
+body.blockcraft-oled .status-bar:not(.dummy) { background-color: #000000; }
+body.blockcraft-oled .workspace-split.mod-root { background-image: linear-gradient(180deg, var(--bc-header-tint), #000 160px); }
+body.blockcraft-oled .workspace-split.mod-root .workspace-leaf,
+body.blockcraft-oled .workspace-split.mod-root .workspace-tabs,
+body.blockcraft-oled .workspace-split.mod-root .workspace-tab-container,
+body.blockcraft-oled .workspace-split.mod-root .workspace-leaf-content { background: transparent; }
+body.blockcraft-oled .workspace-split.mod-root .view-content { background-color: #000000; box-shadow: 0 0 0 1px #17171a; }
+/* floating chrome stays slightly lifted from the black so it remains visible */
+body.blockcraft-oled .workspace-tab-header.is-active { background: #17171a; }
+/* dialogs, settings, popovers, menus */
+body.blockcraft-oled .modal,
+body.blockcraft-oled .modal-container .modal-bg + .modal,
+body.blockcraft-oled .prompt,
+body.blockcraft-oled .vertical-tab-content,
+body.blockcraft-oled .vertical-tab-header,
+body.blockcraft-oled .setting-item-container,
+body.blockcraft-oled .popover,
+body.blockcraft-oled .suggestion-container,
+body.blockcraft-oled .menu { background-color: rgba(8, 8, 9, 0.94); }
+body.blockcraft-oled .modal-bg { background: rgba(0, 0, 0, 0.8); }
+body.blockcraft-oled .callout { --callout-padding: 0; }
+body.blockcraft-oled .callout[data-callout="card"]:not([data-callout-metadata~="accent"]) { background-color: #0b0b0d; }
+body.blockcraft-oled .cm-s-obsidian, body.blockcraft-oled .cm-editor, body.blockcraft-oled .markdown-preview-view { background: transparent; }
+body.blockcraft-oled .blockcraft-panel { background: #000; }
+body.blockcraft-oled .blockcraft-panel .bc-tile-icon,
+body.blockcraft-oled .blockcraft-panel .bc-btn,
+body.blockcraft-oled .blockcraft-panel .bc-info { background: #101012; }

@@ -1,0 +1,18 @@
+{
+  "name": "obsidian-blockcraft",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Block-based notes for Obsidian: cards, columns, drag handles, slash menu and an Insert/Format panel",
+  "scripts": {
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs",
+    "test": "node test/blocks.test.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "latest",
+    "typescript": "^5.6.0"
+  },
+  "type": "module"
+}

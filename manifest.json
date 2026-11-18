@@ -1,0 +1,9 @@
+{
+  "id": "obsidian-blockcraft",
+  "name": "Blockcraft",
+  "version": "0.2.0",
+  "minAppVersion": "1.5.0",
+  "description": "Block-based notes for Obsidian: cards, columns, drag handles, slash menu, an Insert/Format panel and an OLED black mode.",
+  "author": "pwngoblin",
+  "isDesktopOnly": true
+}
