@@ -35,5 +35,8 @@ npm run build      # -> main.js
 npm test           # parser tests
 ```
 
+## License
+MIT, see [LICENSE](LICENSE).
+
 ## Notes
 Blockcraft is an independent project. It is not affiliated with, endorsed by, or sponsored by any other note-taking product or company. Product names mentioned elsewhere belong to their respective owners.

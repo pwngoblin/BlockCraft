@@ -353,10 +353,9 @@ body.blockcraft-on {
 
 /* (custom scrollbars removed: macOS draws native overlay scrollbars; overriding them caused CM6 measure loops) */
 
-/* ---------- SF Symbols-like iconography ----------
-   Obsidian's icons are Lucide (stroke icons). SF Symbols "Regular" weight is a thin,
-   round-capped stroke at ~13pt; we tune Lucide's size/weight to match. (Apple's actual
-   SF Symbols may not be redistributed, so they are not bundled.) */
+/* ---------- Icon weight ----------
+   Obsidian's icons are Lucide stroke icons. We tune their size and stroke to a thin,
+   round-capped style. No third-party icon sets are bundled. */
 body.blockcraft-on {
   --icon-xs: 14px;
   --icon-s: 15px;
@@ -375,7 +374,7 @@ body.blockcraft-on {
 }
 
 /* =====================================================================
-   Liquid Glass (macOS 26 look): translucent, blurred, saturated surfaces,
+   Glass look: translucent, blurred, saturated surfaces,
    specular edge highlights, capsule controls, soft deep shadows.
    CSS can imitate the look; real lensing/refraction is only available from
    macOS itself (see findings §11: "Native menus" / "Translucent window").
